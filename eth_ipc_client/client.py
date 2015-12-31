@@ -1,9 +1,13 @@
 import os
+import time
 import sys
 import socket
 import errno
 import json
 import numbers
+import Queue
+import threading
+import uuid
 
 from eth_ipc_client.utils import (
     wait_for_transaction,
@@ -58,7 +62,7 @@ def construct_filter_args(from_block=None, to_block=None, address=None,
 class Client(object):
     _nonce = 0
 
-    def __init__(self, ipc_path=None):
+    def __init__(self, ipc_path=None, async=True):
         if ipc_path is None:
             if sys.platform == 'darwin':
                 ipc_path = os.path.expanduser("~/Library/Ethereum/geth.ipc")
@@ -77,7 +81,25 @@ class Client(object):
         self.socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         self.socket.connect(ipc_path)
         # Tell the socket not to block on reads.
-        self.socket.settimeout(0.2)
+        self.socket.settimeout(1)
+        self.is_async = async
+
+        if self.is_async:
+            self.request_queue = Queue.Queue()
+            self.results = {}
+
+            self.request_thread = threading.Thread(target=self.process_requests)
+            self.request_thread.daemon = True
+            self.request_thread.start()
+
+    def process_requests(self):
+        while True:
+            id, args, kwargs = self.request_queue.get()
+            try:
+                response = self._make_ipc_request(*args, **kwargs)
+            except ValueError as e:
+                response = e
+            self.results[id] = response
 
     def get_nonce(self):
         self._nonce += 1
@@ -87,14 +109,26 @@ class Client(object):
     def default_from_address(self):
         return self.get_coinbase()
 
-    def make_ipc_request(self, method, params):
+    def make_ipc_request(self, *args, **kwargs):
+        if self.is_async:
+            request_id = uuid.uuid4()
+            self.request_queue.put((request_id, args, kwargs))
+            start = time.time()
+            while time.time() - start < 10:
+                if request_id in self.results:
+                    return self.results.pop(request_id)
+            raise ValueError("Timeout waiting for {0}".format(request_id))
+        else:
+            return self._make_ipc_request(*args, **kwargs)
+
+    def _make_ipc_request(self, method, params):
         request = json.dumps({
             "jsonrpc": "2.0",
             "method": method,
             "params": params,
             "id": self.get_nonce(),
         })
-        self.socket.send(request)
+        self.socket.sendall(request)
         response_raw = ""
 
         while True:
