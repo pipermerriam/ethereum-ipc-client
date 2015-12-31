@@ -1,0 +1,5 @@
+pytest>=2.8.2
+pytest-pythonpath>=0.3
+populus>=0.7.0
+ethereum>=1.0.6
+tox>=1.8.0

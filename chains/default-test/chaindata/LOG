@@ -1,0 +1,5 @@
+=============== Dec 31, 2015 (MST) ===============
+10:43:05.961462 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+10:43:05.962000 db@open opening
+10:43:05.962639 db@janitor F·2 G·0
+10:43:05.962663 db@open done T·638.085µs
