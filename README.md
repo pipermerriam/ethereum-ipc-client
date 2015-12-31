@@ -200,5 +200,5 @@ the provided `txn_hash`.  Returns the transaction hash.
 
 ### `Client.wait_for_block(block_number, max_wait=60)`
 
-Blocks for up to `max_wait` seconds, polling the rpc server until the block
+Blocks for up to `max_wait` seconds, polling the ipc server until the block
 specified by `block_number` is seen.  Returns the block.

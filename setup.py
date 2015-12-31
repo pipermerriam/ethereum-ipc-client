@@ -9,27 +9,24 @@ try:
 except ImportError:
     from distutils.core import setup, find_packages
 
-version = '0.4.2'
+version = '0.1.0'
 
 readme = open(os.path.join(DIR, 'README.md')).read()
 
 
 setup(
-    name='ethereum-rpc-client',
+    name='ethereum-ipc-client',
     version=version,
-    description="""Ethereum JSON RPC Client""",
+    description="""Ethereum IPC Client""",
     long_description=readme,
     author='Piper Merriam',
     author_email='pipermerriam@gmail.com',
-    url='https://github.com/pipermerriam/ethereum-rpc-client',
+    url='https://github.com/pipermerriam/ethereum-ipc-client',
     include_package_data=True,
-    py_modules=['ethereum_rpc_client'],
-    install_requires=[
-        "requests>=2.7.0",
-    ],
+    py_modules=['eth_ipc_client'],
     license="MIT",
     zip_safe=False,
-    keywords='ethereum json json-rpc',
+    keywords='ethereum',
     packages=find_packages(exclude=["tests", "tests.*"]),
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
