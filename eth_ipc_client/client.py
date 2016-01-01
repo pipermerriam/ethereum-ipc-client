@@ -116,7 +116,10 @@ class Client(object):
             start = time.time()
             while time.time() - start < 10:
                 if request_id in self.results:
-                    return self.results.pop(request_id)
+                    result = self.results.pop(request_id)
+                    if isinstance(result, Exception):
+                        raise result
+                    return result
             raise ValueError("Timeout waiting for {0}".format(request_id))
         else:
             return self._make_ipc_request(*args, **kwargs)
