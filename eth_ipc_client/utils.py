@@ -9,7 +9,7 @@ def wait_for_transaction(ipc_client, txn_hash, max_wait=60):
             break
         elif time.time() > start + max_wait:
             raise ValueError("Could not get transaction receipt")
-        time.sleep(2)
+        time.sleep(5)
     return txn_receipt
 
 
@@ -19,7 +19,7 @@ def wait_for_block(ipc_client, block_number, max_wait=60):
         latest_block_number = ipc_client.get_block_number()
         if latest_block_number >= block_number:
             break
-        time.sleep(2)
+        time.sleep(5)
     else:
         raise ValueError("Did not reach block")
     return ipc_client.get_block_by_number(block_number)
