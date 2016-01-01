@@ -62,7 +62,7 @@ def construct_filter_args(from_block=None, to_block=None, address=None,
 class Client(object):
     _nonce = 0
 
-    def __init__(self, ipc_path=None, async=True):
+    def __init__(self, ipc_path=None, async=True, async_timeout=10):
         if ipc_path is None:
             if sys.platform == 'darwin':
                 ipc_path = os.path.expanduser("~/Library/Ethereum/geth.ipc")
@@ -83,6 +83,7 @@ class Client(object):
         # Tell the socket not to block on reads.
         self.socket.settimeout(1)
         self.is_async = async
+        self.async_timeout = async_timeout
 
         if self.is_async:
             self.request_queue = Queue.Queue()
@@ -114,9 +115,12 @@ class Client(object):
             request_id = uuid.uuid4()
             self.request_queue.put((request_id, args, kwargs))
             start = time.time()
-            while time.time() - start < 10:
+            while time.time() - start < self.async_timeout:
                 if request_id in self.results:
-                    return self.results.pop(request_id)
+                    result = self.results.pop(request_id)
+                    if isinstance(result, Exception):
+                        raise result
+                    return result
             raise ValueError("Timeout waiting for {0}".format(request_id))
         else:
             return self._make_ipc_request(*args, **kwargs)
