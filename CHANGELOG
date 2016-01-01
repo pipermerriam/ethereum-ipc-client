@@ -1,3 +1,9 @@
+0.1.3
+-----
+
+- Allow configuring of the async request timeout
+- Reraise errors during async calls.
+
 0.1.2
 -----
 
