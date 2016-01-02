@@ -24,6 +24,9 @@ setup(
     url='https://github.com/pipermerriam/ethereum-ipc-client',
     include_package_data=True,
     py_modules=['eth_ipc_client'],
+    install_requires=[
+        "ethereum-client-utils>=0.3.0",
+    ],
     license="MIT",
     zip_safe=False,
     keywords='ethereum',
