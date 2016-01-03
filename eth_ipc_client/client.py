@@ -15,21 +15,26 @@ class Client(JSONRPCBaseClient):
 
         self.ipc_path = ipc_path
 
-        self.socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-        self.socket.connect(ipc_path)
-        # Tell the socket not to block on reads.
-        self.socket.settimeout(5)
-
         super(Client, self).__init__(*args, **kwargs)
+
+    def get_socket(self):
+        _socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        _socket.connect(self.ipc_path)
+        # Tell the socket not to block on reads.
+        _socket.settimeout(2)
+        return _socket
 
     def _make_request(self, method, params):
         request = self.construct_json_request(method, params)
-        self.socket.sendall(request)
+
+        _socket = self.get_socket()
+        _socket.sendall(request)
+
         response_raw = ""
 
         while True:
             try:
-                response_raw += self.socket.recv(4096)
+                response_raw += _socket.recv(4096)
             except socket.timeout:
                 break
 
