@@ -1,3 +1,13 @@
+0.1.7
+-----
+
+- Extend timeout and handle empty json responses
+
+0.1.6
+-----
+
+- Move ipc finding code to reusable function.
+
 0.1.5
 -----
 

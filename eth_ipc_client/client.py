@@ -18,7 +18,7 @@ class Client(JSONRPCBaseClient):
         self.socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         self.socket.connect(ipc_path)
         # Tell the socket not to block on reads.
-        self.socket.settimeout(1)
+        self.socket.settimeout(5)
 
         super(Client, self).__init__(*args, **kwargs)
 
@@ -32,6 +32,9 @@ class Client(JSONRPCBaseClient):
                 response_raw += self.socket.recv(4096)
             except socket.timeout:
                 break
+
+        if response_raw == "":
+            raise ValueError("No JSON returned by socket")
 
         response = json.loads(response_raw)
 
