@@ -1,5 +1,6 @@
 import socket
 import json
+from contextlib import closing
 
 from eth_client_utils import (
     JSONRPCBaseClient,
@@ -27,16 +28,16 @@ class Client(JSONRPCBaseClient):
     def _make_request(self, method, params):
         request = self.construct_json_request(method, params)
 
-        _socket = self.get_socket()
-        _socket.sendall(request)
+        with closing(self.get_socket()) as _socket:
+            _socket.sendall(request)
 
-        response_raw = ""
+            response_raw = ""
 
-        while True:
-            try:
-                response_raw += _socket.recv(4096)
-            except socket.timeout:
-                break
+            while True:
+                try:
+                    response_raw += _socket.recv(4096)
+                except socket.timeout:
+                    break
 
         if response_raw == "":
             raise ValueError("No JSON returned by socket")
