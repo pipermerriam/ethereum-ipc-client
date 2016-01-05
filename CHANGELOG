@@ -1,3 +1,9 @@
+0.1.9
+-----
+
+- Add a retry to the socket request.
+- Don't close socket unless it errors.
+
 0.1.8
 -----
 
