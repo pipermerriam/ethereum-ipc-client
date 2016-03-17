@@ -2,9 +2,9 @@
 
 [![Build Status](https://travis-ci.org/pipermerriam/ethereum-ipc-client.png)](https://travis-ci.org/pipermerriam/ethereum-ipc-client)
 [![Documentation Status](https://readthedocs.org/projects/ethereum-ipc-client/badge/?version=latest)](https://readthedocs.org/projects/ethereum-ipc-client/?badge=latest)
-[![PyPi version](https://pypip.in/v/ethereum-ipc-client/badge.png)](https://pypi.python.org/pypi/ethereum-ipc-client)
-[![PyPi downloads](https://pypip.in/d/ethereum-ipc-client/badge.png)](https://pypi.python.org/pypi/ethereum-ipc-client)
-   
+[![PyPI](https://img.shields.io/pypi/v/ethereum-ipc-client.svg)](https://pypi.python.org/pypi/ethereum-ipc-client)
+[![PyPI](https://img.shields.io/pypi/dm/ethereum-ipc-client.svg)](https://pypi.python.org/pypi/ethereum-ipc-client)
+
 
 Python client for Ethereum over IPC
 
